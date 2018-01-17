@@ -13,9 +13,11 @@ chmod +x ~/.bin/mars.jar
 echo "alias mars='java -jar ~/.bin/mars.jar'" >> ~/.bashrc
 source ~/.bashrc
 ```
-Then, after cloning the repo you can run the interpreter like
+Then, after cloning the repo you can run the interpreter like:
 
 ```bash
-mars main.asm
+mars p main.asm
 ```
+
+specifying the 'p' argument to assemble all of the .asm files in the current directory into the project.
 

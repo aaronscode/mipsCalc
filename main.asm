@@ -16,7 +16,6 @@
 
 .data
 # printing strings
-user_prompt_str:	.asciiz	"~$ "
 newline_char:		.asciiz "\n"
 space_char:			.asciiz " "
 comma_space:		.asciiz ", "

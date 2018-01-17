@@ -21,10 +21,22 @@
 	do_syscall(PRNT_STR_ID)
 .end_macro
 
+# print string and newline
+.macro print_stringnl($addr)
+	print_string($addr)
+	print_string(newline_char)
+.end_macro
+
 # performs a syscall to print the int in the register $val
 .macro print_int($val)
 	move $a0, $val
 	do_syscall(PRNT_INT_ID)
+.end_macro
+
+# print int and newline
+.macro print_intnl($val)
+	print_int($val)
+	print_string(newline_char)
 .end_macro
 
 # performs a syscall to read a string into the address $addr with
