@@ -24,7 +24,9 @@ ans_string:			.asciiz "ans = "
 err_string:			.asciiz "An error occured!"
 
 # storage space
-input_str:		.space	MAX_STR_LEN
+input_str:		.space	MAX_STR_LEN # text to read in from user
+
+
 
 # list of null-separated strings
 token_list: 	.space 	128 

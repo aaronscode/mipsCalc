@@ -2,6 +2,7 @@
 
 .globl str_cpy
 .globl str_cmpr # string compare
+.globl str_len
 .globl is_white # 
 .globl is_alpha
 .globl is_digit
@@ -77,6 +78,32 @@ str_cmpr_end:
 	pop($s0)
 	return()
 	
+# method: str_len
+#	find the length of a string
+# arguments:
+#	$a0 - address of a null terminated string
+# return:
+#	$v0 - the number of characters in the string up to but not including the null terminator
+str_len:
+	push($ra)
+	local_var($s0)
+
+	la   $t0, null_char
+	lbu  $t0, 0($t0)	# load null char character into $t0
+	li   $v0, 0		# init return value to 0
+str_len_L1:
+	add  $t1, $s0, $a0
+	lbu  $t1, 0($t1)
+	
+	beq $t0, $t1, str_len_end
+	inc($s0)
+	j str_len_L1
+
+str_len_end:
+	move $v0, $s0
+	pop($s0)
+	return()
+
 # method: is_white
 #	determine if a single char is a whitespace characer (i.e. space or tab)
 # arguments:

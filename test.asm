@@ -15,11 +15,15 @@ test_failed:	.asciiz "Test Failed!"
 string_test:	.asciiz "   -------------   String class tests   -------------"
 atoi_test:		.asciiz "atoi tests:"
 str_cmpr_test:	.asciiz "str_cmpr tests:"
+str_len_test:   .asciiz "str_len tests:"
 is_white_test:	.asciiz "is_white tests:"
 is_alpha_test:	.asciiz "is_alpha tests:"
 is_digit_test:	.asciiz "is_digit tests:"
 is_op_test:		.asciiz "is_operator tests:"
 is_paren_test:	.asciiz "is_paren tests:"
+
+lexer_test:	.asciiz "   -------------   Lexer class tests   -------------"
+init_adv_test:	.asciiz "init + advance tests:"
 
 # test vectors for string class -------------------------------------------------
 atoi_test_1:	.asciiz "1234"
@@ -32,6 +36,12 @@ str_cmpr_test_2: .asciiz "hello"
 str_cmpr_test_3: .asciiz "helloooo"
 str_cmpr_test_4: .asciiz "hdllo"
 str_cmpr_test_5: .asciiz "hfllo"
+
+str_len_test_1: .asciiz "fiz"
+str_len_test_2: .asciiz "bang"
+str_len_test_3: .asciiz " "
+str_len_test_4: .asciiz "a"
+str_len_test_5: .asciiz ""
 
 is_white_test_1: .asciiz "n"
 is_white_test_2: .asciiz " "
@@ -66,6 +76,7 @@ is_paren_test_2: .asciiz ")"
 is_paren_test_3: .asciiz "4"
 
 # test vectors for lexer -------------------------------------------------
+advance_test: .asciiz "words 2 + 3 bannana"
 tokenize_input_test_1: .asciiz "3 + 8"
 tokenize_input_test_2: .asciiz "a 5 7 9 bananna"
 tokenize_input_test_3: .asciiz "()+	-*/a8"
@@ -173,6 +184,39 @@ tests:
 	print_intnl($v0)
 	print_stringnl(dash_line)
 	
+	# str_len tests ------------------------------------------------------------------
+	print_stringnl(str_len_test)
+	
+	print_stringnl(str_len_test_1)
+	la $a0, str_len_test_1
+	jal str_len
+	print_intnl($v0)
+	print_string(newline_char)
+
+	print_stringnl(str_len_test_2)
+	la $a0, str_len_test_2
+	jal str_len
+	print_intnl($v0)
+	print_string(newline_char)
+
+	print_stringnl(str_len_test_3)
+	la $a0, str_len_test_3
+	jal str_len
+	print_intnl($v0)
+	print_string(newline_char)
+
+	print_stringnl(str_len_test_4)
+	la $a0, str_len_test_4
+	jal str_len
+	print_intnl($v0)
+	print_string(newline_char)
+
+	print_stringnl(str_len_test_5)
+	la $a0, str_len_test_5
+	jal str_len
+	print_intnl($v0)
+	print_stringnl(dash_line)
+
 	# is_white tests ------------------------------------------------------------------
 	print_stringnl(is_white_test)
 
@@ -382,7 +426,28 @@ tests:
 # Tests for methods in lexer class						  #
 #														  #
 ###########################################################
+	print_stringnl(lexer_test)
 	
+	# init + advance method tests ----------------------------------
+	print_stringnl(init_adv_test)
+
+	# test "words 2 + 3 bannana"
+	print_stringnl(advance_test)
+	la $a0, advance_test
+	jal lex_init
+	la $a0, advance_test
+	jal lex_advance
+	print_intnl($v0)
+	jal lex_advance
+	print_intnl($v0)
+	jal lex_advance
+	print_intnl($v0)
+	jal lex_advance
+	print_intnl($v0)
+	jal lex_advance
+	print_intnl($v0)
+	jal lex_advance
+	print_intnl($v0)
 ###########################################################
 #														  #
 # Tests for methods in parser class						  #

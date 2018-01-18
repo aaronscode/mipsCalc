@@ -64,17 +64,27 @@
 	addi $val, $val, 1
 .end_macro
 
+# push an item onto the stack
 .macro push($reg)
 	addi $sp, $sp, -4 	# adjust stack for 1 item
 	sw   $reg, 0($sp)	# save the register on the stack
 .end_macro
 
+# pop an item from the stack
 .macro pop($reg)
 	lw   $reg, 0($sp)	# load off the stack into $reg
 	addi $sp, $sp, 4	# move the stack pointer
+.end_macro
+
+# allocate a local var by pushing a saved register ($s0-$s7) to
+# stack and zeroing it
+.macro local_var($reg)
+	push($reg)
+	add	 $reg, $zero, $zero
 .end_macro
 
 .macro return()
 	pop($ra)
 	jr $ra
 .end_macro
+
