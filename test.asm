@@ -22,8 +22,9 @@ is_digit_test:	.asciiz "is_digit tests:"
 is_op_test:		.asciiz "is_operator tests:"
 is_paren_test:	.asciiz "is_paren tests:"
 
-lexer_test:	.asciiz "   -------------   Lexer class tests   -------------"
+lexer_test:		.asciiz "   -------------   Lexer class tests   -------------"
 init_adv_test:	.asciiz "init + advance tests:"
+skp_white_test:	.asciiz "skip whitespace tests:"
 
 # test vectors for string class -------------------------------------------------
 atoi_test_1:	.asciiz "1234"
@@ -76,7 +77,9 @@ is_paren_test_2: .asciiz ")"
 is_paren_test_3: .asciiz "4"
 
 # test vectors for lexer -------------------------------------------------
-advance_test: .asciiz "words 2 + 3 bannana"
+advance_test_1:			.asciiz "words 2 + 3 bannana"
+skip_white_test_1:		.asciiz "a    lot of space"
+
 tokenize_input_test_1: .asciiz "3 + 8"
 tokenize_input_test_2: .asciiz "a 5 7 9 bananna"
 tokenize_input_test_3: .asciiz "()+	-*/a8"
@@ -432,22 +435,49 @@ tests:
 	print_stringnl(init_adv_test)
 
 	# test "words 2 + 3 bannana"
-	print_stringnl(advance_test)
-	la $a0, advance_test
+	print_stringnl(advance_test_1)
+	la $a0, advance_test_1
 	jal lex_init
-	la $a0, advance_test
+	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
+	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
+	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
+	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
+	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
+	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
+
+	print_stringnl(dash_line)
+
+	# skip whitespace method tests ----------------------------------
+	print_stringnl(skp_white_test)
+	
+	# test "a    lot of space"
+	print_stringnl(skip_white_test_1)
+	la   $a0, skip_white_test_1
+	jal  lex_init
+	print_intnl($v0)
+
+	la   $a0, skip_white_test_1
+	jal  lex_advance
+	print_intnl($v0)
+
+	la   $a0, skip_white_test_1
+	jal  lex_skip_whitespace
+	print_intnl($v0)
+
+	print_stringnl(dash_line)
+
 ###########################################################
 #														  #
 # Tests for methods in parser class						  #

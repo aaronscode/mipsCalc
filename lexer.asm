@@ -1,14 +1,18 @@
 # file: lexer.asm
 .globl lex_init
 .globl lex_advance
+.globl lex_skip_whitespace
 
 .include "macros.asm"
 
 .data
 # class data
-input_len:		.space 1 # current char lexer is examining
-cur_char:		.space 2 # 
+input_len:		.space 1 
+cur_char:		.space 1 # current char lexer is examining
 cur_pos:		.space 1
+
+# temporary string for converting digits to int
+lex_int_str		.space 64
 
 .text
 # method: lexer_init
@@ -16,7 +20,7 @@ cur_pos:		.space 1
 # arguments:
 #	$a0 - location of input string
 # return:
-#	none - but init cur_pos and cur_char
+#	$v0 - current char
 lex_init:
 	push($ra)
 	# set cur_pos = 0 
@@ -24,13 +28,13 @@ lex_init:
 	# set cur_char = input_string[0]
 	lbu	 $t1, 0($a0) 
 	sb   $t1, cur_char
-	# set the current byte of cur_char to '\0'
-	la   $t2, cur_char
-	inc($t2)
-	sb   $zero, 0($t2)
+
 	# set the length of the input text
 	jal  str_len
 	sb   $v0, input_len
+
+	la $v0, cur_char
+	lbu $v0, 0($v0)
 	return()
 
 # method: advance
@@ -64,4 +68,79 @@ adv_eoi:
 	li   $t3, 0
 	sb   $t3, cur_char
 	move $v0, $t3
+	return()
+
+# method: skip_whitespace
+#	advance the cur_pos pointer over whitespace characters
+# arguments:
+#	$a0 - location of input text string
+#	implicit: location of cur_char, cur_pos, len of input string
+# return:
+#	$v0 - new cur_char, implicity modify value of cur_char, cur_pos
+lex_skip_whitespace:
+	push($ra)
+	push($s0) # address of input text
+	push($s1) # cur_char
+	push($s2) # null character
+
+	move $s0, $a0 # copy input arg to local var
+	la   $s2, null_char # copy value of null char
+	lbu  $s2, 0($s2)
+lex_skip_whitespace_loop:
+	# check if cur_char is null
+	la   $s1, cur_char
+	lbu  $s1, 0($s1)
+	# if not, check if it's whitespace
+	bne  $s1, $s2, lex_skip_whitespace_not_null 
+
+	# if it is null, end function
+	j lex_skip_whitespace_end
+lex_skip_whitespace_not_null:
+	la $a0, cur_char
+	jal is_white # check if current character is whitespace
+
+	beqz $v0, lex_skip_whitespace_end # if it isn't whitespace, end
+
+	move $a0, $s0 # if it is whitespace, advance to next character
+	jal lex_advance
+
+	j lex_skip_whitespace_loop # go back to top of loop
+
+lex_skip_whitespace_end:
+	move $v0, $s1
+	pop($s2)
+	pop($s1)
+	pop($s0)
+	return()
+	
+# method: integer
+#	advance the cur_pos pointer over whitespace characters
+# arguments:
+#	$a0 - location of input text string
+#	implicit: location of cur_char, cur_pos, len of input string
+# return:
+#	$v0 - next integer value in input text
+#   $v1 - number of characters making up integer
+lex_integer:
+	push($ra)
+	push($s0) # local var for holding input text address
+	push($s1) # local var for holding null
+	push($s2) # local var for holding address of temp string
+
+	move $s0, $a0
+
+	la   $s1, null_char # load null character into $s0
+	lbu  $s1, 0($s1)
+
+lex_integer_L1: # loop for nulling out temp string
+	
+lex_integer_L2: # loop for accumulating digits into tmp string
+
+	j lex_integer_end
+lex_integer_not_null:
+
+	j lex_integer_L2
+lex_integer_end:
+	la   $a0, lex_int_str
+	jal  atoi # convert string to integer (returns value in $v0)
 	return()
