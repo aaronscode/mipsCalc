@@ -77,10 +77,10 @@
 .end_macro
 
 # allocate a local var by pushing a saved register ($s0-$s7) to
-# stack and zeroing it
-.macro local_var($reg)
+# stack and initializing it with $value
+.macro local_var($reg, $value)
 	push($reg)
-	add	 $reg, $zero, $zero
+	move $reg, $value
 .end_macro
 
 .macro return()

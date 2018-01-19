@@ -25,6 +25,7 @@ is_paren_test:	.asciiz "is_paren tests:"
 lexer_test:		.asciiz "   -------------   Lexer class tests   -------------"
 init_adv_test:	.asciiz "init + advance tests:"
 skp_white_test:	.asciiz "skip whitespace tests:"
+integer_test:   .asciiz "interger tests:"
 
 # test vectors for string class -------------------------------------------------
 atoi_test_1:	.asciiz "1234"
@@ -79,6 +80,7 @@ is_paren_test_3: .asciiz "4"
 # test vectors for lexer -------------------------------------------------
 advance_test_1:			.asciiz "words 2 + 3 bannana"
 skip_white_test_1:		.asciiz "a    lot of space"
+integer_test_1:			.asciiz "123    432"
 
 tokenize_input_test_1: .asciiz "3 + 8"
 tokenize_input_test_2: .asciiz "a 5 7 9 bananna"
@@ -478,9 +480,32 @@ tests:
 
 	print_stringnl(dash_line)
 
+	# skip whitespace method tests ----------------------------------
+	print_stringnl(integer_test)
+
+	# test "123    432"
+	print_stringnl(integer_test_1)
+	la   $a0, integer_test_1
+	jal lex_init
+	print_intnl($v0)
+
+	la   $a0, integer_test_1
+	jal  lex_integer
+	print_intnl($v0)
+	
+	la   $a0, integer_test_1
+	jal lex_skip_whitespace
+	print_intnl($v0)
+
+	la   $a0, integer_test_1
+	jal  lex_integer
+	print_intnl($v0)
+
+	print_stringnl(dash_line)
+
 ###########################################################
 #														  #
-# Tests for methods in parser class						  #
+# Tests for methods in interpreter class				  #
 #														  #
 ###########################################################
 

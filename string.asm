@@ -86,7 +86,7 @@ str_cmpr_end:
 #	$v0 - the number of characters in the string up to but not including the null terminator
 str_len:
 	push($ra)
-	local_var($s0)
+	local_var($s0, $zero)
 
 	la   $t0, null_char
 	lbu  $t0, 0($t0)	# load null char character into $t0
