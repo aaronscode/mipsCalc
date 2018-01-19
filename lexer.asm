@@ -3,8 +3,20 @@
 .globl lex_advance
 .globl lex_skip_whitespace
 .globl lex_integer
+.globl lex_get_next_token
 
 .include "macros.asm"
+
+# define token types
+.eqv TOK_EOF		0
+.eqv TOK_INTEGER	1
+.eqv TOK_PLUS		2
+.eqv TOK_MINUS		3
+.eqv TOK_MUL		4
+.eqv TOK_DIV		5
+.eqv TOK_EXP		6
+.eqv TOK_LPAREN		7
+.eqv TOK_RPAREN		8
 
 .data
 # class data
@@ -12,11 +24,11 @@ input_len:		.space 1
 cur_char:		.space 1 # current char lexer is examining
 cur_pos:		.space 1
 
-# temporary string for converting digits to int
+# temporary string for converting digits to int in lex_integer
 lex_int_str:	.space 64
 
 .text
-# method: lexer_init
+# method: lex_init
 #	init an instance of the lexer object by populating global variables
 # arguments:
 #	$a0 - location of input string
@@ -115,7 +127,7 @@ lex_skip_whitespace_end:
 	return()
 	
 # method: integer
-#	advance the cur_pos pointer over whitespace characters
+#	parse a string of digits in input text into an integer
 # arguments:
 #	$a0 - location of input text string
 #	implicit: location of cur_char, cur_pos, len of input string
@@ -178,6 +190,128 @@ lex_integer_end:
 	la   $a0, lex_int_str
 	jal  atoi # convert string to integer (returns value in $v0)
 	pop($s3)
+	pop($s2)
+	pop($s1)
+	pop($s0)
+	return()
+
+# method: get_next_token
+#	get the next token from the input string
+# arguments:
+#	$a0 - location of input text string
+#	implicit: location of cur_char
+# return:
+#	$v0 - token type
+#   $v1 - value of token. If integer token, value will be int, otherwise, value will be a symbol
+lex_get_next_token:
+	push($ra)
+	local_var($s0, $a0) # local var to hold loc of input text
+	push($s1) # local var to hold current char
+	push($s2) # local var to hold value of null character
+
+	la   $s2, null_char
+	lbu  $s2, 0($s2)
+	
+lex_get_next_token_top:
+	# load in current character
+	la   $s1, cur_char
+	lbu  $s1, 0($s1)
+	
+	# check if it's null
+	beq  $s1, $s2, lex_get_next_token_null # if it is, return EOF token
+	
+	# if not, check if whitespace:
+	la   $a0, cur_char
+	jal  is_white
+	beq  $v0, 1, lex_get_next_token_white # if it is, skip whitespace and jump back to top
+
+	# check if current char is digit
+	la	 $a0, cur_char
+	jal  is_digit
+	beq  $v0, 1, lex_get_next_token_int # if it is, parse an integer
+	
+	# check if current char is '+'
+	beq  $s1, 43, lex_get_next_token_plus
+	beq  $s1, 45, lex_get_next_token_minus
+	beq  $s1, 42, lex_get_next_token_mul
+	beq  $s1, 47, lex_get_next_token_div
+	beq  $s1, 94, lex_get_next_token_exp
+	beq  $s1, 40, lex_get_next_token_lparen
+	beq  $s1, 41, lex_get_next_token_rparen
+	
+	# TODO: PARSING ERROR CODE HERE
+	j lex_get_next_token_null
+
+	
+lex_get_next_token_white:
+	move $a0, $s0
+	jal lex_skip_whitespace
+	j    lex_get_next_token_top
+	
+lex_get_next_token_int:
+	move $a0, $s0
+	jal  lex_integer
+	li	 $t0, TOK_INTEGER
+	move $t1, $v0
+	j lex_get_next_token_end
+
+# ldi the literal token value (ascii value) instead of moving it from $s1, just to be sure
+lex_get_next_token_plus:
+	move $a0, $s0
+	jal  lex_advance
+	li   $t0, TOK_PLUS
+	move $t1, $s1
+	j lex_get_next_token_end
+
+lex_get_next_token_minus:
+	move $a0, $s0
+	jal  lex_advance
+	li  $t0, TOK_MINUS
+	move $t1, $s1
+	j lex_get_next_token_end
+
+lex_get_next_token_mul:
+	move $a0, $s0
+	jal  lex_advance
+	li  $t0, TOK_MUL
+	move $t1, $s1
+	j lex_get_next_token_end
+
+lex_get_next_token_div:
+	move $a0, $s0
+	jal  lex_advance
+	li  $t0, TOK_DIV
+	move $t1, $s1
+	j lex_get_next_token_end
+
+lex_get_next_token_exp:
+	move $a0, $s0
+	jal  lex_advance
+	li  $t0, TOK_EXP
+	move $t1, $s1
+	j lex_get_next_token_end
+
+lex_get_next_token_lparen:
+	move $a0, $s0
+	jal  lex_advance
+	li  $t0, TOK_LPAREN
+	move $t1, $s1
+	j lex_get_next_token_end
+
+lex_get_next_token_rparen:
+	move $a0, $s0
+	jal  lex_advance
+	li  $t0, TOK_RPAREN
+	move $t1, $s1
+	j lex_get_next_token_end
+
+lex_get_next_token_null:
+	li  $t0, TOK_EOF
+	li  $t1, 0
+
+lex_get_next_token_end:
+	move $v0, $t0
+	move $v1, $t1
 	pop($s2)
 	pop($s1)
 	pop($s0)

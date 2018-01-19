@@ -26,6 +26,7 @@ lexer_test:		.asciiz "   -------------   Lexer class tests   -------------"
 init_adv_test:	.asciiz "init + advance tests:"
 skp_white_test:	.asciiz "skip whitespace tests:"
 integer_test:   .asciiz "interger tests:"
+get_next_tok_test:   .asciiz "get_next_token tests:"
 
 # test vectors for string class -------------------------------------------------
 atoi_test_1:	.asciiz "1234"
@@ -81,6 +82,9 @@ is_paren_test_3: .asciiz "4"
 advance_test_1:			.asciiz "words 2 + 3 bannana"
 skip_white_test_1:		.asciiz "a    lot of space"
 integer_test_1:			.asciiz "123    432"
+get_next_tok_test_1:	.asciiz "123 + 2 * 5"
+get_next_tok_test_2:	.asciiz "+-/^ *()1234"
+get_next_tok_test_3:	.asciiz ""
 
 tokenize_input_test_1: .asciiz "3 + 8"
 tokenize_input_test_2: .asciiz "a 5 7 9 bananna"
@@ -480,7 +484,7 @@ tests:
 
 	print_stringnl(dash_line)
 
-	# skip whitespace method tests ----------------------------------
+	# integer parsing method tests ----------------------------------
 	print_stringnl(integer_test)
 
 	# test "123    432"
@@ -503,6 +507,91 @@ tests:
 
 	print_stringnl(dash_line)
 
+	# get next token method tests ----------------------------------
+	print_stringnl(get_next_tok_test)
+
+	# test "123 + 2 * 5"
+	print_stringnl(get_next_tok_test_1)
+	la   $a0, get_next_tok_test_1
+	jal lex_init
+	la   $a0, get_next_tok_test_1
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_1
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_1
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_1
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_1
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_1
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	print_string(newline_char)
+
+	# test "+-/^ *()1234"
+	print_stringnl(get_next_tok_test_2)
+	la   $a0, get_next_tok_test_2
+	jal lex_init
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	la   $a0, get_next_tok_test_2
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+	print_string(newline_char)
+
+	# test ""
+	print_stringnl(get_next_tok_test_3)
+	la   $a0, get_next_tok_test_3
+	jal lex_init
+	la   $a0, get_next_tok_test_3
+	jal  lex_get_next_token
+	print_intnl($v0)
+	print_intnl($v1)
+
+	print_stringnl(dash_line)
 ###########################################################
 #														  #
 # Tests for methods in interpreter class				  #
