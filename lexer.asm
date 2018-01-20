@@ -20,6 +20,8 @@
 
 .data
 # class data
+.align 2
+input_text:     .space 4 # pointer to input text
 input_len:		.space 1 
 cur_char:		.space 1 # current char lexer is examining
 cur_pos:		.space 1
@@ -36,6 +38,8 @@ lex_int_str:	.space 64
 #	$v0 - current char
 lex_init:
 	push($ra)
+    # store location of input text
+    sw   $a0, input_text
 	# set cur_pos = 0 
 	sb   $zero, cur_pos
 	# set cur_char = input_string[0]
@@ -53,8 +57,7 @@ lex_init:
 # method: advance
 #	advance pointer to next character in input string
 # arguments:
-#	$a0 - location of input text string
-#	implicit: location of cur_char, cur_pos, len of input string
+#	implicit: location of input_text, cur_char, cur_pos, len of input string
 # return:
 #	$v0 - new cur_char, implicity modify value of cur_char, cur_pos
 lex_advance:
@@ -72,7 +75,8 @@ lex_advance:
 	j adv_eoi # else jump to end of input
 adv_not_eoi: # not end of input
 	# set cur_char = input_text[cur_pos]
-	add  $t1, $t1, $a0
+    lw   $t4, input_text
+	add  $t1, $t1, $t4
 	lbu  $t3, 0($t1)
 	sb   $t3, cur_char
 	move $v0, $t3
@@ -86,17 +90,14 @@ adv_eoi:
 # method: skip_whitespace
 #	advance the cur_pos pointer over whitespace characters
 # arguments:
-#	$a0 - location of input text string
 #	implicit: location of cur_char, cur_pos, len of input string
 # return:
 #	$v0 - new cur_char, implicity modify value of cur_char, cur_pos
 lex_skip_whitespace:
 	push($ra)
-	push($s0) # address of input text
 	push($s1) # cur_char
 	push($s2) # null character
 
-	move $s0, $a0 # copy input arg to local var
 	la   $s2, null_char # copy value of null char
 	lbu  $s2, 0($s2)
 lex_skip_whitespace_loop:
@@ -114,8 +115,7 @@ lex_skip_whitespace_not_null:
 
 	beqz $v0, lex_skip_whitespace_end # if it isn't whitespace, end
 
-	move $a0, $s0 # if it is whitespace, advance to next character
-	jal lex_advance
+	jal lex_advance # if it is whitespace, advance to next character
 
 	j lex_skip_whitespace_loop # go back to top of loop
 
@@ -123,7 +123,6 @@ lex_skip_whitespace_end:
 	move $v0, $s1
 	pop($s2)
 	pop($s1)
-	pop($s0)
 	return()
 	
 # method: integer
@@ -136,7 +135,6 @@ lex_skip_whitespace_end:
 #   $v1 - number of characters making up integer
 lex_integer:
 	push($ra)
-	local_var($s0, $a0) # local var for holding input text address
 	push($s1) # local var for holding null
 	push($s2) # local var for holding address of temp string
 	local_var($s3, $zero) # local var for holding loop counter
@@ -180,7 +178,6 @@ lex_integer_not_null:
 	sb   $t0, 0($t1)
 	
 	# advance the lexer forward one character
-	move $a0, $s0
 	jal lex_advance
 
 	inc($s3) # increment loop counter
@@ -192,20 +189,17 @@ lex_integer_end:
 	pop($s3)
 	pop($s2)
 	pop($s1)
-	pop($s0)
 	return()
 
 # method: get_next_token
 #	get the next token from the input string
 # arguments:
-#	$a0 - location of input text string
 #	implicit: location of cur_char
 # return:
 #	$v0 - token type
 #   $v1 - value of token. If integer token, value will be int, otherwise, value will be a symbol
 lex_get_next_token:
 	push($ra)
-	local_var($s0, $a0) # local var to hold loc of input text
 	push($s1) # local var to hold current char
 	push($s2) # local var to hold value of null character
 
@@ -244,12 +238,10 @@ lex_get_next_token_top:
 
 	
 lex_get_next_token_white:
-	move $a0, $s0
 	jal lex_skip_whitespace
 	j    lex_get_next_token_top
 	
 lex_get_next_token_int:
-	move $a0, $s0
 	jal  lex_integer
 	li	 $t0, TOK_INTEGER
 	move $t1, $v0
@@ -257,49 +249,42 @@ lex_get_next_token_int:
 
 # ldi the literal token value (ascii value) instead of moving it from $s1, just to be sure
 lex_get_next_token_plus:
-	move $a0, $s0
 	jal  lex_advance
 	li   $t0, TOK_PLUS
 	move $t1, $s1
 	j lex_get_next_token_end
 
 lex_get_next_token_minus:
-	move $a0, $s0
 	jal  lex_advance
 	li  $t0, TOK_MINUS
 	move $t1, $s1
 	j lex_get_next_token_end
 
 lex_get_next_token_mul:
-	move $a0, $s0
 	jal  lex_advance
 	li  $t0, TOK_MUL
 	move $t1, $s1
 	j lex_get_next_token_end
 
 lex_get_next_token_div:
-	move $a0, $s0
 	jal  lex_advance
 	li  $t0, TOK_DIV
 	move $t1, $s1
 	j lex_get_next_token_end
 
 lex_get_next_token_exp:
-	move $a0, $s0
 	jal  lex_advance
 	li  $t0, TOK_EXP
 	move $t1, $s1
 	j lex_get_next_token_end
 
 lex_get_next_token_lparen:
-	move $a0, $s0
 	jal  lex_advance
 	li  $t0, TOK_LPAREN
 	move $t1, $s1
 	j lex_get_next_token_end
 
 lex_get_next_token_rparen:
-	move $a0, $s0
 	jal  lex_advance
 	li  $t0, TOK_RPAREN
 	move $t1, $s1
@@ -314,5 +299,4 @@ lex_get_next_token_end:
 	move $v1, $t1
 	pop($s2)
 	pop($s1)
-	pop($s0)
 	return()
