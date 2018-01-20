@@ -444,22 +444,16 @@ tests:
 	print_stringnl(advance_test_1)
 	la $a0, advance_test_1
 	jal lex_init
-	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
-	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
-	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
-	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
-	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
-	la $a0, advance_test_1
 	jal lex_advance
 	print_intnl($v0)
 
@@ -474,11 +468,9 @@ tests:
 	jal  lex_init
 	print_intnl($v0)
 
-	la   $a0, skip_white_test_1
 	jal  lex_advance
 	print_intnl($v0)
 
-	la   $a0, skip_white_test_1
 	jal  lex_skip_whitespace
 	print_intnl($v0)
 
@@ -493,15 +485,12 @@ tests:
 	jal lex_init
 	print_intnl($v0)
 
-	la   $a0, integer_test_1
 	jal  lex_integer
 	print_intnl($v0)
 	
-	la   $a0, integer_test_1
 	jal lex_skip_whitespace
 	print_intnl($v0)
 
-	la   $a0, integer_test_1
 	jal  lex_integer
 	print_intnl($v0)
 
@@ -514,27 +503,21 @@ tests:
 	print_stringnl(get_next_tok_test_1)
 	la   $a0, get_next_tok_test_1
 	jal lex_init
-	la   $a0, get_next_tok_test_1
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_1
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_1
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_1
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_1
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_1
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
@@ -544,39 +527,30 @@ tests:
 	print_stringnl(get_next_tok_test_2)
 	la   $a0, get_next_tok_test_2
 	jal lex_init
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
-	la   $a0, get_next_tok_test_2
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
@@ -586,7 +560,6 @@ tests:
 	print_stringnl(get_next_tok_test_3)
 	la   $a0, get_next_tok_test_3
 	jal lex_init
-	la   $a0, get_next_tok_test_3
 	jal  lex_get_next_token
 	print_intnl($v0)
 	print_intnl($v1)
