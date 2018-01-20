@@ -29,6 +29,8 @@ skp_white_test:	.asciiz "skip whitespace tests:"
 integer_test:   .asciiz "interger tests:"
 get_next_tok_test:   .asciiz "get_next_token tests:"
 
+interp_test:	.asciiz "   -------------   Interpreter class tests   -------------"
+interp_init_test: .asciiz "interpreter init tests:"
 # test vectors for string class -------------------------------------------------
 atoi_test_1:	.asciiz "1234"
 atoi_test_2:	.asciiz "0"
@@ -91,18 +93,8 @@ get_next_tok_test_1:	.asciiz "123 + 2 * 5"
 get_next_tok_test_2:	.asciiz "+-/^ *()1234"
 get_next_tok_test_3:	.asciiz ""
 
-tokenize_input_test_1: .asciiz "3 + 8"
-tokenize_input_test_2: .asciiz "a 5 7 9 bananna"
-tokenize_input_test_3: .asciiz "()+	-*/a8"
-tokenize_input_test_4: .asciiz "dsakjdla&9999"
-tokenize_input_test_5: .asciiz "12345 678 ++++"
-tokenize_input_test_6: .asciiz "abc 123 ()9"
-
-# test vectors for parser ------------------------------------------------
-mk_shunt_stack_test_1: .asciiz "3 4 51 8"
-mk_shunt_stack_test_2: .asciiz "3 4 (22 58 2)5"
-mk_shunt_stack_test_3: .asciiz "3+4"
-mk_shunt_stack_test_4: .asciiz "3+4*(2?1)"
+# test vectors for interpreter -------------------------------------------
+interp_init_test_1:     .asciiz "222"
 
 .text
 tests:
@@ -594,6 +586,15 @@ tests:
 # Tests for methods in interpreter class				  #
 #														  #
 ###########################################################
+	print_stringnl(interp_test)
+	
+	# init method tests ----------------------------------
+	print_stringnl(interp_init_test)
+    
+    print_stringnl(interp_init_test_1)
+    la   $a0, interp_init_test_1
+    jal lex_init
+    jal intrp_init
 
 ###########################################################
 #														  #

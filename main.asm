@@ -49,8 +49,8 @@ user_prompt:	.asciiz "calc> "
 .text
 main: # main program - entry point
 
-	jal tests 	# run test cases
-	exit() 		# quit when done
+	#jal tests 	# run test cases
+	#exit() 		# quit when done
 # main loop prompting user for input, 
 prompt_loop:
 	# read user input

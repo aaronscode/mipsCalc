@@ -86,8 +86,8 @@ intrp_expr:
 
     local_var($s0, $zero) # our result
 
-    jal  intrp_term
-    move $s0, $v0
+    jal  intrp_term # try to interpet a term from the input
+    move $s0, $v0   # copy the term to our result
 
 intrp_expr_L1:
     # check if token type is PLUS or MINUS
@@ -170,10 +170,11 @@ intrp_factor:
     beq  $t0, TOK_LPAREN, intrp_factor_LPAREN
 
 intrp_factor_INT:
+    lw   $s0, tok_value # save the value of the token before we eat it
+
     move $a0, $t0 # eat our INT token
     jal  intrp_eat
     
-    lw   $s0, tok_value
     j intrp_factor_end
 
 intrp_factor_LPAREN:
