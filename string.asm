@@ -3,6 +3,7 @@
 .globl str_cpy
 .globl str_cmpr # string compare
 .globl str_len
+.globl rtrim
 .globl is_white # 
 .globl is_alpha
 .globl is_digit
@@ -103,6 +104,40 @@ str_len_end:
 	move $v0, $s0
 	pop($s0)
 	return()
+
+# method: rtrim
+#   trim newline off the end of string, replacing with null character
+# arguments:
+#   $a0 - address of null terminated string
+# return:
+#   none - modifies input string
+rtrim:
+    push($ra)
+
+    # load null character
+    la   $t0, null_char
+    lbu  $t0, 0($t0)
+    # load newline
+    la   $t1, newline_char
+    lbu  $t1, newline_char
+    
+    # init loop counter to 0
+    move $t2, $zero
+
+rtrim_L1:
+    add  $t3, $t2, $a0 # calc address of next char
+    lbu  $t4, 0($t3)   #load current char into $t4
+
+    inc($t2) # increment loop counter
+
+    beq  $t0, $t4, rtrim_end # if null char, we've reached end
+    bne  $t1, $t4, rtrim_L1  # if not null or newline, go to next char
+    
+    # if here character is newline
+    sb   $t0, 0($t3) # set the newline to a null character
+
+rtrim_end:
+    return()
 
 # method: is_white
 #	determine if a single char is a whitespace characer (i.e. space or tab)

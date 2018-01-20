@@ -58,6 +58,8 @@ prompt_loop:
 	read_string(input_str, MAX_STR_LEN)
 
 	# trim the newline
+	la $a0, input_str
+	jal rtrim
 	
 	# initialize our lexer with the input string
 	la $a0, input_str

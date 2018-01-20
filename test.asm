@@ -16,6 +16,7 @@ string_test:	.asciiz "   -------------   String class tests   -------------"
 atoi_test:		.asciiz "atoi tests:"
 str_cmpr_test:	.asciiz "str_cmpr tests:"
 str_len_test:   .asciiz "str_len tests:"
+rtrim_test:     .asciiz "rtrim tests:"
 is_white_test:	.asciiz "is_white tests:"
 is_alpha_test:	.asciiz "is_alpha tests:"
 is_digit_test:	.asciiz "is_digit tests:"
@@ -45,6 +46,10 @@ str_len_test_2: .asciiz "bang"
 str_len_test_3: .asciiz " "
 str_len_test_4: .asciiz "a"
 str_len_test_5: .asciiz ""
+
+rtrim_test_1:   .asciiz "no newline"
+rtrim_test_2:   .asciiz "one newline\n"
+rtrim_test_3:   .asciiz "two newlines\n\n"
 
 is_white_test_1: .asciiz "n"
 is_white_test_2: .asciiz " "
@@ -224,6 +229,25 @@ tests:
 	la $a0, str_len_test_5
 	jal str_len
 	print_intnl($v0)
+	print_stringnl(dash_line)
+
+	# rtrim tests ------------------------------------------------------------------
+	print_stringnl(rtrim_test)
+
+    print_stringnl(rtrim_test_1)
+    la $a0, rtrim_test_1
+    jal rtrim
+    print_stringnl(rtrim_test_1)
+
+    print_stringnl(rtrim_test_2)
+    la $a0, rtrim_test_2
+    jal rtrim
+    print_stringnl(rtrim_test_2)
+
+    print_stringnl(rtrim_test_3)
+    la $a0, rtrim_test_3
+    jal rtrim
+    print_stringnl(rtrim_test_3)
 	print_stringnl(dash_line)
 
 	# is_white tests ------------------------------------------------------------------
