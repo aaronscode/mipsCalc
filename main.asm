@@ -52,13 +52,25 @@ main: # main program - entry point
 	jal tests 	# run test cases
 	exit() 		# quit when done
 # main loop prompting user for input, 
-#prompt_loop:
+prompt_loop:
 	# read user input
-	#print_string(user_prompt)
-	#read_string(input_str, MAX_STR_LEN)
+	print_string(user_prompt)
+	read_string(input_str, MAX_STR_LEN)
+
+	# trim the newline
 	
-	# tokenize input string into token_list
-	#la $a0, input_str
+	# initialize our lexer with the input string
+	la $a0, input_str
+	jal lex_init
+	
+	# init our interpreter
+	jal intrp_init
+	
+	# try to interpret an expression
+	jal intrp_expr
+	
+	print_intnl($v0)
+	
 	#la $a1, token_list
 	#jal tokenize_input
 	#beqz $v0, error_occured
@@ -72,7 +84,7 @@ main: # main program - entry point
 	# print output 
 	#print_string(ans_string)
 	
-	#j prompt_loop
+	j prompt_loop
 #error_occured:
 	#print_string(err_string)
 	#print_string(newline_char)
