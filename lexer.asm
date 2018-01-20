@@ -20,6 +20,7 @@
 
 .data
 # class data
+invalid_char:   .asciiz "Invalid Character!"
 .align 2
 input_text:     .space 4 # pointer to input text
 input_len:		.space 1 
@@ -233,9 +234,9 @@ lex_get_next_token_top:
 	beq  $s1, 40, lex_get_next_token_lparen
 	beq  $s1, 41, lex_get_next_token_rparen
 	
-	# TODO: PARSING ERROR CODE HERE
-	j lex_get_next_token_null
-
+	# TODO: throw and exception and return to input loop
+	print_stringnl(invalid_char)
+    exit()
 	
 lex_get_next_token_white:
 	jal lex_skip_whitespace
