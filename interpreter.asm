@@ -220,7 +220,10 @@ intrp_power_EXP:
     move $a0, $t0
     jal intrp_eat
     jal intrp_factor
-    add $s0, $s0, $v0
+    move $a0, $s0
+    move $a1, $v0
+    jal math_pow
+    move $s0, $v0
     j intrp_power_L1
 
 intrp_power_end:

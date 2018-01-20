@@ -1,5 +1,4 @@
 # Todo:
-* write math libary for exponents instead of just doing addition
 * write accessor methods for interpreter and lexer class variables
 * write some better tests for lexer and interpreter once I've done that ^
 * variable assignment
