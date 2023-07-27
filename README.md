@@ -1,6 +1,6 @@
 # MIPS Calculator
 
-mipsCalc is a simple recursive descent intepreter written in mips assembly. It is capeable of interpreting simple arithematic expressions involving addition, subtraction, multiplication, division, and exponentiation. It also supports grouping by parenthesis and the definition of single letter variables. This code was written using and can be run by the [MARS - MIPS Assembler and Runtime Simulator](http://courses.missouristate.edu/KenVollmar/mars/).
+mipsCalc is a simple recursive descent intepreter written in mips assembly. It is capable of interpreting simple arithematic expressions involving addition, subtraction, multiplication, division, and exponentiation. It also supports grouping by parenthesis and the definition of single letter variables. This code was written using and can be run by the [MARS - MIPS Assembler and Runtime Simulator](http://courses.missouristate.edu/KenVollmar/mars/).
 
 ## Running the code
 
